@@ -49,15 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             incDecDiv.dataset.productId = product.id
             incDecDiv.innerHTML = `
-            <button class="dec"></button>
-            <p class="count">0${cartProduct?.quantity || 0}</p>
-            <button class="inc"></button>
+            <button class="dec"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" fill="none" viewBox="0 0 10 2"><path fill="#fff" d="M0 .375h10v1.25H0V.375Z"/></svg></button>
+            <p class="count">${cartProduct?.quantity > 0 ? cartProduct?.quantity : `0${cartProduct?.quantity}`}</p>
+            <button class="inc"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 10 10"><path fill="#fff" d="M10 4.375H5.625V0h-1.25v4.375H0v1.25h4.375V10h1.25V5.625H10v-1.25Z"/></svg></button>
             `
 
             let addToCartButton = document.createElement('button')
             addToCartButton.classList.add('add-to-cart')
             addToCartButton.innerHTML = `
-            <img class='add-to-cart-image' src="./images/icon-add-to-cart.svg" alt="">
+            <img class='add-to-cart-image' src="./images/icon-add-to-cart.svg" alt="add-to-cart-icon">
             <p class='add'>Add to Cart</p>
             `
 
@@ -73,11 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if(window.matchMedia("(width < 492px)").matches){
 
                 productViewDiv.innerHTML = `
-                <img src="${product.image.mobile}" alt="">
+                <img src="${product.image.mobile}" alt="${product.name} image">
                 `
             }else{
                 productViewDiv.innerHTML = `
-                <img src="${product.image.desktop}" alt="">
+                <img src="${product.image.desktop}" alt="${product.name} image">
                 `
             }
 
@@ -109,12 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     productContianer.addEventListener('click', (e) => {
 
-        if(e.target.classList.contains('inc') || e.target.classList.contains('dec')){
-            const incDecDivElement = e.target.parentElement
+
+        if(e.target.closest('.inc') || e.target.closest('.dec')){
+            let incDecDivElement
+            if(e.target.closest('.dec')){
+                incDecDivElement = e.target.closest('.dec').parentElement
+
+            }else{
+                incDecDivElement = e.target.closest('.inc').parentElement
+            }
             const productId = parseInt(incDecDivElement.dataset.productId)
             let productDetailBeforeChange = cartProducts.find(product => product.id === productId)
 
-            if(e.target.classList.contains('inc')){
+            if(e.target.closest('.inc')){
                 cartProducts = cartProducts.map(product => product.id === productId ? { ...product, quantity: product.quantity + 1} : {...product})
 
             }else{
@@ -177,7 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const removeItemButton = document.createElement('button')
             removeItemButton.classList.add('remove-cart-item')
             removeItemButton.innerHTML = `
-                <img src="./images/icon-remove-item.svg" alt="">
+                <svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 10 10"><path fill="#CAAFA7" d="M8.375 9.375 5 6 1.625 9.375l-1-1L4 5 .625 1.625l1-1L5 4 8.375.625l1 1L6 5l3.375 3.375-1 1Z"/></svg>
+
             `
 
             removeItemButton.addEventListener('click', (e) => {
@@ -217,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             itemInfoDiv.classList.add('order-item-info')
 
             itemInfoDiv.innerHTML = `
-                <img src="${product.image.thumbnail}" alt="">
+                <img src="${product.image.thumbnail}" alt="${product.name} image">
             `
 
             const div = document.createElement('div')
